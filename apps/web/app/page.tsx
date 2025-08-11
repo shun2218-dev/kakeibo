@@ -7,13 +7,27 @@ type Props = Omit<ImageProps, "src"> & {
   srcDark: string;
 };
 
-const ThemeImage = (props: Props) => {
+const message = await fetch(process.env.NEXT_API_URL! + "?name=api-test", {
+  headers: {
+    "Content-Type": "application/json",
+  }
+}).then(res => res.json()).then(data => data.message).catch(e => {
+  console.error("Error fetching message from API:", e);
+  return { message: "Error fetching message" };
+});
+
+const ThemeImage = async (props: Props) => {
   const { srcLight, srcDark, ...rest } = props;
+  
+  console.log(message, "message from API");
 
   return (
     <>
       <Image {...rest} src={srcLight} className="imgLight" />
       <Image {...rest} src={srcDark} className="imgDark" />
+      {
+        message ? <p>{message}</p> : <p>Loading...</p>
+      }
     </>
   );
 };

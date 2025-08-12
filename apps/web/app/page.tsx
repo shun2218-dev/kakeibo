@@ -1,6 +1,7 @@
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
+import { createUser } from "./lib/actions";
 
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;
@@ -10,24 +11,40 @@ type Props = Omit<ImageProps, "src"> & {
 const message = await fetch(process.env.NEXT_API_URL! + "?name=api-test", {
   headers: {
     "Content-Type": "application/json",
-  }
-}).then(res => res.json()).then(data => data.message).catch(e => {
-  console.error("Error fetching message from API:", e);
-  return { message: "Error fetching message" };
-});
+  },
+})
+  .then((res) => res.json())
+  .then((data) => data.message)
+  .catch((e) => {
+    console.error("Error fetching message from API:", e);
+    return { message: "Error fetching message" };
+  });
+
+const getAllUser = async () => {
+  const response = await fetch(process.env.NEXT_API_URL! + "/user", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  return data;
+};
 
 const ThemeImage = async (props: Props) => {
   const { srcLight, srcDark, ...rest } = props;
-  
+
   console.log(message, "message from API");
+  console.log("Fetching all users...", await getAllUser());
 
   return (
     <>
       <Image {...rest} src={srcLight} className="imgLight" />
       <Image {...rest} src={srcDark} className="imgDark" />
-      {
-        message ? <p>{message}</p> : <p>Loading...</p>
-      }
+      {message ? <p>{message}</p> : <p>Loading...</p>}
+      <form name="create-user" action={createUser}>
+        <input type="text" name="name" />
+        <button type="submit">送信</button>
+      </form>
     </>
   );
 };

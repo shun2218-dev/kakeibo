@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    environment:
+      - POSTGRES_USER=${USER_NAME}
+      - POSTGRES_PASSWORD=${USER_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - kakeibo_pg_data:/var/lib/postgresql/data
+    networks:
+      - kakeibo-net
+
+volumes:
+  kakeibo_pg_data:
+
+networks:
+  kakeibo-net:

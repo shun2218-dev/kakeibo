@@ -1,0 +1,4 @@
+{
+  "extends": "@repo/typescript-config/nestjs.build.json",
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
